@@ -16,6 +16,7 @@
 - tecmake: warning
   # tecmake.mak:1256: warning: overriding commands for target `../bin/Linux26g4'
   # tecmake.mak:1216: warning: ignoring old commands for target `../bin/Linux26g4'
+- require perl 5.8+
 
 (errors to be reported to tecgraf)
 - IUP error: libiupmot.so: undefined reference to `XmScaleSetTicks' FreeBSD 7.2 / Cygwin 1.7
