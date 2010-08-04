@@ -1,5 +1,11 @@
 Revision history for Alien-IUP
 
+0.0.8	04/08/2010
+	- FAIL ALWAYS debug version
+	- typo in opengl target selection
+	- fixed return value from make command
+	- improved debug diagnostic
+
 0.0.7	03/08/2010
 	- running make via IPC::Run3 (cutting output to last 1000 chars)
 

@@ -2,6 +2,9 @@
 - compile.t: Linux linker failure (cairo/pango related)
 - XmScaleSetTicks: missing on cygwin/freebsd (iupmot)
 
+- basic Win32 diagnostics
+- in "no gui detected" we do not know what libs to add to config('libs')
+
 (medium priority)
 - at least basic Win32 Build
 - switch from dynamic to static linking
