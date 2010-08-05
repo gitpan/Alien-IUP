@@ -281,7 +281,7 @@ sub apply_patch {
   }
 }
 
-sub do_system_output_tail {
+sub run_output_tail {
   my ($self, $limit, @cmd) = @_;
   my $output;
   print STDERR "CMD: " . join(' ',@cmd) . "\n";
@@ -296,6 +296,22 @@ sub do_system_output_tail {
     print STDERR "OUTPUT: (only last $limit chars)\n", $output, "\n";
   }
   return $success;
+}
+
+sub run_stdout2str {
+  my ($self, @cmd) = @_;
+  my $output;
+  my $rv = run3(\@cmd, \undef, \$output, \undef, { return_if_system_error => 1 } );
+  $output =~ s/[\r\n]*$//;
+  return $output;
+}
+
+sub run_bothout2str {
+  my ($self, @cmd) = @_;
+  my $output;
+  my $rv = run3(\@cmd, \undef, \$output, \$output, { return_if_system_error => 1 } );
+  $output =~ s/[\r\n]*$//;
+  return $output;
 }
 
 sub find_file {

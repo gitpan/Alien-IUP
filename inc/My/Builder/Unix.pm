@@ -11,25 +11,23 @@ use File::Copy;
 use Config;
 
 sub build_binaries {
-  my ($self, $build_out, $srcdir) = @_;
-  
-  my $success = 0;
-  # set initial value to 0 if you intentionally want all build to fails
-  # e.g. to see build details from cpan testers
-  
+  my ($self, $build_out, $srcdir) = @_; 
+  my $success = 1;    
   my ($extra_cflags, $extra_lflags) = ('-I/usr/local/include', '-L/usr/local/lib');
-  if (-d '/usr/X11R6/include' && -d '/usr/X11R6/lib' ) {
-    $extra_cflags .= ' -I/usr/X11R6/include';
-    $extra_lflags .= ' -L/usr/X11R6/lib';
-  }
-  if (-d '/usr/openwin/share/include/' && -d '/usr/openwin/share/lib/') { # solaris 10
-    $extra_cflags .= ' -I/usr/openwin/share/include';
-    $extra_lflags .= ' -L/usr/openwin/share/lib';
-  }
-  if (-d '/opt/local/include' && -d '/opt/local/lib') { #macos
-    $extra_cflags .= ' -I/opt/local/include';
-    $extra_lflags .= ' -L/opt/local/lib';
-  }
+  #if (-d '/usr/X11R6/include' && -d '/usr/X11R6/lib' ) {
+  #  $extra_cflags .= ' -I/usr/X11R6/include';
+  #  $extra_lflags .= ' -L/usr/X11R6/lib';
+  #}
+  #if (-d '/usr/openwin/share/include/' && -d '/usr/openwin/share/lib/') { # solaris 10
+  #  $extra_cflags .= ' -I/usr/openwin/share/include';
+  #  $extra_lflags .= ' -L/usr/openwin/share/lib';
+  #}
+  #if (-d '/opt/local/include' && -d '/opt/local/lib') { #macos
+  #  $extra_cflags .= ' -I/opt/local/include';
+  #  $extra_lflags .= ' -L/opt/local/lib';
+  #}
+  
+  #x11 - solaris: /usr/openwin/include + /usr/openwin/lib
 
   print "Checking available libraries/headers...\n";
   my %has;
@@ -76,18 +74,19 @@ sub build_binaries {
   print "Has: $has{$_} - $_\n" foreach (sort keys %has);
 
   print "Brute force lookup:\n";
-  print "[/usr] $_\n" foreach ($self->find_file('/usr', qr/\/(Xlib.h|Xm.h|gtk.h|glu.h|gl.h)$/));
-  print "[/opt] $_\n" foreach ($self->find_file('/opt', qr/\/(Xlib.h|Xm.h|gtk.h|glu.h|gl.h)$/));
-  print "[/sw ] $_\n" foreach ($self->find_file('/sw' , qr/\/(Xlib.h|Xm.h|gtk.h|glu.h|gl.h)$/));
+  my $re = qr/\/(Xlib.h|Xm.h|gtk.h|glu.h|gl.h|libX11\.[^\d]*|libGL\.[^\d]*|libXm\.[^\d]*)$/;
+  print "[/usr    ] $_\n" foreach ($self->find_file('/usr', $re));
+  print "[/opt    ] $_\n" foreach ($self->find_file('/opt', $re));
+  print "[/sw     ] $_\n" foreach ($self->find_file('/sw', $re));
+  print "[/System ] $_\n" foreach ($self->find_file('/System', $re));
+  print "[/Library] $_\n" foreach ($self->find_file('/Library', $re));
   
   print "Dumping some pkg-info:\n";
-  print "[pkg-config --variable=prefix gtk+-2.0] " . `pkg-config --variable=prefix gtk+-2.0 2>/dev/null`;
-  print "[pkg-config --variable=prefix gl      ] " . `pkg-config --variable=prefix gl 2>/dev/null`;
-  print "[pkg-config --variable=prefix glu     ] " . `pkg-config --variable=prefix glu 2>/dev/null`;
-  print "[pkg-config --variable=prefix x11     ] " . `pkg-config --variable=prefix x11 2>/dev/null`;
-  print "[pkg-config --variable=prefix xt      ] " . `pkg-config --variable=prefix xt 2>/dev/null`;
-  print "[pkg-config --variable=prefix xext    ] " . `pkg-config --variable=prefix xext 2>/dev/null`;
-  print "[pkg-config --variable=prefix xmu     ] " . `pkg-config --variable=prefix xmu 2>/dev/null`;
+  for my $pkg (qw[gtk+-2.0 gl glu x11 xt xext xmu]) {
+    print "[prefix     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=prefix], $pkg) . "\n";
+    print "[libdir     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=libdir], $pkg) . "\n";
+    print "[includedir $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=includedir], $pkg) . "\n";
+  }
 
   my @x11_libs; # just base X11 libs
   push(@x11_libs, 'X11')  if $has{l_X11};
@@ -119,23 +118,23 @@ sub build_binaries {
 
   #choose GUI subsystem, priorities if multiple subsystems detected: 1. Win32(cygwin), 2. GTK, 3. X11/Motif
   my @libs;
-  if ($has{windows}) { #cygwin only
+  if ($has{xxxwindows}) { #cygwin only
     push(@makeopts, 'USE_WIN=Yes');
     push(@makeopts, 'X11_LIBS='); #no X11 libs on cygwin
     push(@libs, qw[gdi32 comdlg32 comctl32 winspool uuid ole32 oleaut32 opengl32 glu32 glut]);
     ($extra_cflags, $extra_lflags) = ('', '');
   }
   elsif ($has{gtk}) {
-    my $pref=`pkg-config --variable=prefix gtk+-2.0 2>/dev/null`;
+    my $pref = $self->run_stdout2str(qw[pkg-config --variable=prefix gtk+-2.0 2]);
     push(@makeopts, 'USE_GTK=Yes');
     push(@makeopts, "X11_LIBS=" . join(' ', @x11_libs));
     push(@makeopts, "OPENGL_LIBS=" . join(' ', @opengl_libs));
     push(@makeopts, "GTK=$pref") if $pref;
-    my $mods = 'gtk+-2.0 gdk-2.0 pango cairo';
     push(@libs, @opengl_libs);
     #Note: $extra_?flags will be stored into ConfigData - they are not used for building
-    ($extra_cflags = `pkg-config --cflags $mods 2>/dev/null`) =~ s/[\n\r]*$//;
-    ($extra_lflags = `pkg-config --libs $mods 2>/dev/null`) =~ s/[\n\r]*$//;
+    my @mods = qw[gtk+-2.0 gdk-2.0 pango cairo];
+    $extra_cflags = $self->run_stdout2str(qw[pkg-config --cflags], @mods);
+    $extra_lflags = $self->run_stdout2str(qw[pkg-config --libs], @mods);
   }
   elsif ($has{Xlib} && $has{Xm}) {
     push(@makeopts, 'USE_X11=Yes');
@@ -174,7 +173,7 @@ sub build_binaries {
     if ($_ =~ /lib([a-zA-Z0-9\_\-\.]*?)\.(so|dylib|bundle|a|dll\.a)$/) {
       $seen{$1} = 1;
     }
-    else {
+    elsif ($_ !~ /\.dll$/) { # *.dll on cygwin is OK
       warn "###WARN### Unexpected filename '$_'";
       $success = 0;
     }
@@ -186,13 +185,11 @@ sub build_binaries {
   $self->config_data('extra_cflags', $extra_cflags);
   $self->config_data('extra_lflags', $extra_lflags);
   
-  if ($success) {
-    print "Build finished sucessfully!\n";
-  }
-  else {
-    die "###BUILD ABORTED###";
-  }
-  
+  die "###BUILD ABORTED###" unless $success;
+  print "Build finished sucessfully!\n";
+    
+  #DEBUG: fail intentionally here if you want to see build details from cpan testers
+  die "Intentionally failing";
 };
 
 sub build_via_tecmake {
@@ -222,7 +219,7 @@ sub build_via_tecmake {
     ($im_si =`$makesysinfo 2>&1`) =~ s/[\n\r]*$//;
     print "$im_si\n";
     foreach my $t (@{$imtgs}) {
-      $done{$t} = $self->do_system_output_tail(1000, $make, $t, @makeopts);
+      $done{$t} = $self->run_output_tail(1000, $make, $t, @makeopts);
       warn "###WARN### [$?] during make $t" unless $done{$t};
       $success = 0 unless $done{$t};
     }
@@ -237,7 +234,7 @@ sub build_via_tecmake {
     ($cd_si =`$makesysinfo 2>&1`) =~ s/[\n\r]*$//;
     print "$cd_si\n";
     foreach my $t (@{$cdtgs}) {
-      $done{$t} = $self->do_system_output_tail(1000, $make, $t, @makeopts);
+      $done{$t} = $self->run_output_tail(1000, $make, $t, @makeopts);
       warn "###WARN### [$?] during make $t" unless $done{$t};
       $success = 0 unless $done{$t};
     }
@@ -252,7 +249,7 @@ sub build_via_tecmake {
     ($iup_si =`$makesysinfo 2>&1`) =~ s/[\n\r]*$//;
     print "$iup_si\n";
     foreach my $t (@{$iuptgs}) {
-      $done{$t} = $self->do_system_output_tail(1000, $make, $t, @makeopts);
+      $done{$t} = $self->run_output_tail(1000, $make, $t, @makeopts);
       warn "###WARN### [$?] during make $t" unless $done{$t};
       $success = 0 unless $done{$t};
     }
