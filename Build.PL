@@ -19,10 +19,12 @@ my $builder = $package->new(
   dist_author        => 'KMX, kmx@cpan.org',
   license            => 'mit',
   requires => {
+    'perl'              => '5.008',
     'File::ShareDir'    => 0,
     'File::Spec'        => 0,
   },
   configure_requires => {
+    'perl'              => '5.008',
     'File::Spec'        => 0,
     'File::Temp'        => 0,
     'File::Find'        => 0,
@@ -36,6 +38,7 @@ my $builder = $package->new(
     'IPC::Run3'         => 0,
   },
   build_requires => {
+    'perl'              => '5.008',
     'Test::More'        => 0,
     'File::ShareDir'    => 0,
     'File::Spec'        => 0,
@@ -51,7 +54,7 @@ my $builder = $package->new(
     'IPC::Run3'         => 0,
   },
   share_dir          => 'sharedir',
-  add_to_cleanup     => [ 'Alien-IUP-*', 'build_done' ],
+  add_to_cleanup     => [ 'Alien-IUP-*', 'build_done', 'build_src' ],
   create_readme      => 1,
   meta_merge => {
     resources  => {

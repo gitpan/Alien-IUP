@@ -21,7 +21,6 @@ sub ACTION_code {
   my $self = shift;
 
   unless (-e 'build_done') {
-    $self->add_to_cleanup('build_done');
     my $inst = $self->notes('already_installed_lib');
     if (defined $inst) {
       $self->config_data('config', { LIBS   => $inst->{lflags},
@@ -37,7 +36,6 @@ sub ACTION_code {
       # troubles when user reinstalls the newer version of Alien package
       my $build_out = catfile('sharedir', $self->{properties}->{dist_version});
       $self->add_to_cleanup($build_out);
-      $self->add_to_cleanup($build_src);
 
       # store info into CofigData
       $self->config_data('iup_url', $self->notes('iup_url'));
@@ -319,7 +317,7 @@ sub find_file {
   my @files;
   $re ||= qr/.*/;
   {    
-    #no warnings 'File::Find'; #hide warning "Can't opendir(...): Permission denied
+    no warnings 'File::Find'; #hide warning "Can't opendir(...): Permission denied
     find({ wanted => sub { push @files, rel2abs($_) if /$re/ }, follow => 1, no_chdir => 1 , follow_skip => 2}, $dir);
   };
   return @files;
