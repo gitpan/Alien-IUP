@@ -9,7 +9,7 @@ use File::Spec::Functions qw(catfile rel2abs);
 use ExtUtils::Command;
 use File::Fetch;
 use File::Find;
-use File::Path qw(make_path remove_tree);
+use File::Path qw();
 use File::ShareDir;
 use File::Temp qw(tempdir tempfile);
 use Digest::SHA qw(sha1_hex);
@@ -19,18 +19,17 @@ use ExtUtils::Liblist;
 use Text::Patch;
 use IPC::Run3;
 
-sub ACTION_install
-{
- my $self = shift;
- my $sharedir = eval {File::ShareDir::dist_dir('Alien-IUP')} || '';
+sub ACTION_install {
+  my $self = shift;
+  my $sharedir = eval {File::ShareDir::dist_dir('Alien-IUP')} || '';
  
- if ( -d $sharedir ) {
-   print STDERR "Removing the old '$sharedir'\n";
-   remove_tree($sharedir);
-   make_path($sharedir);
- }
- 
- return $self->SUPER::ACTION_install(@_);
+  if ( -d $sharedir ) {
+    print STDERR "Removing the old '$sharedir'\n";
+    File::Path::rmtree($sharedir);
+    File::Path::mkpath($sharedir);    
+  }
+
+  return $self->SUPER::ACTION_install(@_);
 }
 
 sub ACTION_code {
