@@ -1,7 +1,26 @@
 IMPORTANT
-- none
+- [FIXED]Solaris - make iup ...
+  make: Fatal error in reader: Makefile, line 2: Unexpected end of line seen
+  http://www.cpantesters.org/cpan/report/fc4e098c-c8b1-11df-a178-6129d48374d3
+- Dragonfly BSD
+  libjasper/jasper/jas_types.h:155 - 188
+  /usr/include/stdint.h:55: error: 'int_fast8_t'   has a previous declaration as 'typedef __int_fast8_t int_fast8_t'
+  /usr/include/stdint.h:63: error: 'uint_fast8_t'  has a previous declaration as 'typedef __uint_fast8_t uint_fast8_t'
+  /usr/include/stdint.h:56: error: 'int_fast16_t'  has a previous declaration as 'typedef __int_fast16_t int_fast16_t'
+  /usr/include/stdint.h:64: error: 'uint_fast16_t' has a previous declaration as 'typedef __uint_fast16_t uint_fast16_t'
+  /usr/include/stdint.h:58: error: 'int_fast64_t'  has a previous declaration as 'typedef __int_fast64_t int_fast64_t'
+  /usr/include/stdint.h:66: error: 'uint_fast64_t' has a previous declaration as 'typedef __uint_fast64_t uint_fast64_t'
+  http://www.cpantesters.org/cpan/report/e2f01a0e-c8aa-11df-87cd-1c8c4afd17af
+- Solaris - has GTK2 but pkg-config does not work
+  http://www.cpantesters.org/cpan/report/ae333f6e-c7b8-11df-9f3b-d01fd48374d3
+- OpenBSD - im : process/im_distance.cpp compile error
+  g++ -c ... -o ../obj/im_process/OpenBSD47/im_distance.o process/im_distance.cpp
+  virtual memory exhausted: Cannot allocate memory
+  http://www.cpantesters.org/cpan/report/90fda052-c9d8-11df-87cd-1c8c4afd17af
 
+  
 MEDIUM PRIORITY
+- if more Build options (GTK2, X11, ...) ask user what to build
 - Solaris - having GTK2 but no pkg-config
   http://www.cpantesters.org/cpan/report/5df5662e-c02b-11df-8a85-1117d48374d3
 - more complex compile test (use some advanced iup C example, using more then just iup)
@@ -22,3 +41,5 @@ LOW PRIORITY
 ERRORS TO BE REPORTED TO TECGRAF
 - IUP error: libiupmot.so: undefined reference to `XmScaleSetTicks' FreeBSD 7.2 / Cygwin 1.7
 - using -fpic on FreeBSD 64bit
+- nonUNIX newlinws in iup's makefile http://www.cpantesters.org/cpan/report/fc4e098c-c8b1-11df-a178-6129d48374d3
+- Dragonfly BSD: libjasper/jasper/jas_types.h:155 - 188 http://www.cpantesters.org/cpan/report/e2f01a0e-c8aa-11df-87cd-1c8c4afd17af
