@@ -1,5 +1,9 @@
 Revision history for Alien-IUP
 
+0.0.19_1 29/09/2010
+	- DragonFly patch for libjasper/jasper/jas_types.h
+	- create_makefile_pl => 'small' (creating Makefile.PL to satisfy old CPAN clients)
+
 0.0.19	28/09/2010
 	- iup patch - fixing newlines in the main Makefile (troubles on solaris)
 
