@@ -1,12 +1,9 @@
 IMPORTANT
-- ask user what to build if more Build options (GTK2, X11, ...)
-- ask if user wants to see all compile message
-- OpenBSD + lesstif - undefined: XmCHARSET_TEXT??? (perhaps old LessTif version, does not happed on Cygwin/lesstif)
-- Cygwin  + lesstif - iupmot_val.c:(.text+0x16c): undefined reference to '_XmScaleSetTicks'
+- none
 
 MEDIUM PRIORITY
-- Solaris - has GTK2 but pkg-config does not work
-  http://www.cpantesters.org/cpan/report/ae333f6e-c7b8-11df-9f3b-d01fd48374d3
+- OpenBSD + lesstif - undefined: XmCHARSET_TEXT??? (perhaps old LessTif version, does not happed on Cygwin/lesstif)
+- Cygwin  + lesstif - iupmot_val.c:(.text+0x16c): undefined reference to '_XmScaleSetTicks'
 - OpenBSD - im : process/im_distance.cpp compile error
   g++ -c ... -o ../obj/im_process/OpenBSD47/im_distance.o process/im_distance.cpp
   virtual memory exhausted: Cannot allocate memory
@@ -14,7 +11,8 @@ MEDIUM PRIORITY
   (dirty fix: skipping im_process build on OpenBSD)
 - more complex compile test (use some advanced iup C example, using more then just iup)
 - add olecontrol to windows build
-- enhance interface: Alien::IUP->has('iupcd')
+- enhance interface: Alien::IUP->has('iupcd') ... = 1 | 0
+- enhance interface: Alien::IUP->gui ... = 'win' | 'gtk2' | 'x11/mot'
 
 LOW PRIORITY
 - maybe die if "no gui detected" (now defaulting to X11)
