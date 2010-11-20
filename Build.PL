@@ -8,7 +8,8 @@ use lib 'inc';
 my %platforms =(
   # Unix = default, thus not listing all UNIX like systems
   MSWin32 => 'Windows',
-  cygwin => 'Unix',
+  cygwin  => 'Cygwin',
+  linux   => 'Unix',
 );
 my $package = 'My::Builder::' . ($platforms{$^O} || 'Unix');
 print STDERR "Gonna use '$package' class ...\n";
@@ -79,17 +80,23 @@ if ($builder->check_installed_lib()) {
 $builder->notes('build_debug_info', lc($builder->prompt("\nWanna see more debug info during build (y/n)?", 'y')) eq 'y' ? 1 : 0);
 
 # set what tarballs we are gonna use
-$builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.2_Sources.tar.gz');
-$builder->notes('iup_sha1', 'ca27b5a51d24e6292dc761081d1f8d497be43114');
-$builder->notes('iup_patches', [ 'patches/iup.diff' ] );
+#$builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.2_Sources.tar.gz');
+#$builder->notes('iup_sha1', 'ca27b5a51d24e6292dc761081d1f8d497be43114');
+$builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.3_Sources.tar.gz');
+$builder->notes('iup_sha1', 'cb43248932d7b217466af09f3c5c47f1be568de8');
+$builder->notes('iup_patches', [ 'patches/iup-3.3.diff' ] );
 
-$builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.2_Sources.tar.gz');
-$builder->notes('im_sha1', 'a805043af8af9703ded9049ecce1d4c48fc4f224');
-$builder->notes('im_patches', [ 'patches/im.diff' ] );
+#$builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.2_Sources.tar.gz');
+#$builder->notes('im_sha1', 'a805043af8af9703ded9049ecce1d4c48fc4f224');
+$builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.3_Sources.tar.gz');
+$builder->notes('im_sha1', '93f5e1fef25d9ac42a8c3a628411156b695cd7d1');
+$builder->notes('im_patches', [ 'patches/im-3.6.3.diff' ] );
 
-$builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.4_Sources.tar.gz');
-$builder->notes('cd_sha1', '6d1d1c6a6348be19c8cba1a0b7368c64b4532911');
-$builder->notes('cd_patches', [ 'patches/cd.diff' ] );
+#$builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.4_Sources.tar.gz');
+#$builder->notes('cd_sha1', '6d1d1c6a6348be19c8cba1a0b7368c64b4532911');
+#$builder->notes('cd_patches', [ 'patches/cd.diff' ] );
+$builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.4.1_Sources.tar.gz');
+$builder->notes('cd_sha1', 'b771752f253ab3bf6ee8c4bea228d5d16f4352ec');
 
 # check if we have GNU make otherwise 'exit 0' - cpan testers will report "N/A"
 my $m = $builder->get_make;

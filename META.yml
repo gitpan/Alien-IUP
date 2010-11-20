@@ -43,13 +43,13 @@ name: Alien-IUP
 provides:
   Alien::IUP:
     file: lib/Alien/IUP.pm
-    version: 0.024
+    version: 0.1000_01
 requires:
   File::ShareDir: 1.00
   File::Spec: 0
   perl: 5.008
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP
-  license: http://www.opensource.org/licenses/mit-license.php
+  license: http://opensource.org/licenses/mit-license.php
   repository: http://github.com/kmx/alien-iup
-version: 0.024
+version: 0.1000_01

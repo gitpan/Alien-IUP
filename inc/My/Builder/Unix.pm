@@ -101,15 +101,12 @@ sub build_binaries {
   $has{l_GL}    = $self->check_lib( 'GL',   $extra_cflags, $extra_lflags );
   $has{l_GLU}   = $self->check_lib( 'GLU',  $extra_cflags, $extra_lflags . ' -lGL -lm' );
   $has{l_glut}  = $self->check_lib( 'glut', $extra_cflags, $extra_lflags );
-  $has{l_gdi32} = $self->check_lib( 'gdi32' );  # cygwin only
-  $has{l_glu32} = $self->check_lib( 'glu32' );  # cygwin only
 
   $has{Xm}      = $self->check_header('Xm/Xm.h',   $extra_cflags);
   $has{Xlib}    = $self->check_header('X11/Xlib.h',$extra_cflags); #iupgl cdx11
   $has{glx}     = $self->check_header('GL/glx.h',  $extra_cflags); #iupgl
   $has{glu}     = $self->check_header('GL/glu.h',  $extra_cflags);
   $has{gl}      = $self->check_header('GL/gl.h',   $extra_cflags);
-  $has{windows} = $self->check_header('windows.h');                #iupwin
 
   if ($self->notes('build_debug_info')) {
     #$has{fftw3}   = $self->check_header('fftw3.h',   $extra_cflags); #im_fftw3 = http://www.fftw.org/
@@ -142,7 +139,7 @@ sub build_binaries {
   push(@x11_libs, 'X11')  if $has{l_X11};
   push(@x11_libs, 'Xext') if $has{l_Xext};
 
-  my @opengl_libs; # for non MS Windows
+  my @opengl_libs;
   push(@opengl_libs, 'GL')  if $has{l_GL};
   push(@opengl_libs, 'GLU') if $has{l_GLU};
 
@@ -159,7 +156,7 @@ sub build_binaries {
 
   #possible targets: iup iupcd iupcontrols iupim iupimglib iup_pplot iupgl
   my @iuptargets = qw[iup iupcd iupcontrols iupim iupimglib iup_pplot iupgl];
-  @iuptargets = grep { $_ !~ /^(iupgl)$/ } @iuptargets unless ($has{windows} && $has{gl}) || ($has{glx});
+  @iuptargets = grep { $_ !~ /^(iupgl)$/ } @iuptargets unless $has{glx};
 
   #store debug info into ConfigData
   $self->config_data('debug_has', \%has);
@@ -169,13 +166,12 @@ sub build_binaries {
 
   my @makeopts  = qw[NO_DYNAMIC=Yes USE_NODEPEND=Yes];
   #my @makeopts  = qw[NO_STATIC=Yes USE_NODEPEND=Yes];
-
-  #choose GUI subsystem, priorities if multiple subsystems detected: 1. Win32(cygwin), 2. GTK, 3. X11/Motif
+  
+  #choose GUI subsystem, priorities if multiple subsystems detected: 1. GTK, 2. X11/Motif
   my @libs;
   my @build_opts;
   my $build_target = '';
-
-  push(@build_opts, 'MS Windows native') if $has{windows}; #cygwin only
+  
   push(@build_opts, 'GTK2') if $has{gtk};
   push(@build_opts, 'X11/Motif') if ($has{Xlib} && $has{Xm});
 
@@ -198,17 +194,11 @@ sub build_binaries {
     $build_target = 'X11/Motif';
   }
 
-  print STDERR "Build target=", ($build_target || ''), "\n";
-  if ($build_target eq 'MS Windows native') { #cygwin only
-    push(@makeopts, 'USE_WIN=Yes');
-    push(@makeopts, 'X11_LIBS='); #no X11 libs on cygwin
-    push(@libs, qw[gdi32 comdlg32 comctl32 winspool uuid ole32 oleaut32 opengl32 glu32]); #xxx ???glut
-    ($extra_cflags, $extra_lflags) = ('', '');
-  }
-  elsif ($build_target eq 'GTK2') {
+  print STDERR "Build target=", ($build_target || ''), "\n";  
+  if ($build_target eq 'GTK2') {
     push(@makeopts, 'USE_GTK=Yes');
     #detected libs
-    push(@makeopts, "GTK_BASE=$dir_gtk") if $dir_gtk;
+#xxx    push(@makeopts, "GTK_BASE=$dir_gtk") if $dir_gtk;
     push(@makeopts, "X11_LIBS=" . join(' ', @x11_libs));
     push(@makeopts, "X11_LIB=$dir_x11_lib") if $dir_x11_lib;
     push(@makeopts, "X11_INC=$dir_x11_inc") if $dir_x11_inc;
@@ -310,8 +300,6 @@ sub build_via_tecmake {
   if(-d "$srcdir/im/src") {
     print STDERR "Gonna build 'im'\n";
     chdir "$srcdir/im/src";
-    # some debug info
-    $im_si = $self->run_output_std($make, qw/-f tecmake.mak sysinfo MAKENAME= USE_NODEPEND=Yes/, @{$mopts}) if $self->notes('build_debug_info');    
     foreach my $t (@{$imtgs}) {
       if ($self->notes('build_msgs')) {
         $done{$t} = $self->run_output_std($make, $t, @{$mopts});
