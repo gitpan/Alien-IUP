@@ -109,10 +109,6 @@ sub build_binaries {
   $has{gl}      = $self->check_header('GL/gl.h',   $extra_cflags);
 
   if ($self->notes('build_debug_info')) {
-    #$has{fftw3}   = $self->check_header('fftw3.h',   $extra_cflags); #im_fftw3 = http://www.fftw.org/
-    #$has{wmsdk}   = $self->check_header('wmsdk.h');                  #im_wmv
-    #$has{ecw}     = $self->check_header('NCSECWClient.h');           #im_format_ecw = ECW (Enhanced Compression Wavelet) format
-    #$has{XxXxX}   = $self->check_header('XxXxX/XxXxX.h');            #non existing header
     print STDERR "Has: $has{$_} - $_\n" foreach (sort keys %has);
 
     print STDERR "Brute force lookup:\n";
@@ -145,17 +141,17 @@ sub build_binaries {
 
   #possible targets: im im_process im_jp2 im_fftw im_capture im_avi im_wmv im_fftw3 im_ecw
   my @imtargets = qw[im im_process im_jp2 im_fftw];
-  if ($^O eq 'openbsd') {
-    warn "###WARN### Skipping im_process on OpenBSD"; # xxx TODO xxx
-    @imtargets = grep { $_ !~ /^(im_process)$/ } @imtargets;
-  }
+#  if ($^O eq 'openbsd') {
+#    warn "###WARN### Skipping im_process on OpenBSD"; # xxx TODO xxx
+#    @imtargets = grep { $_ !~ /^(im_process)$/ } @imtargets;
+#  }
 
   #possible targets: cd_freetype cd_ftgl cd cd_pdflib cdpdf cdgl cdcontextplus cdcairo
   my @cdtargets = qw[cd_freetype cd_ftgl cd cd_pdflib cdpdf cdgl];
   @cdtargets = grep { $_ !~ /^(cd_ftgl|cdgl)$/ } @cdtargets unless $has{l_GLU};
 
   #possible targets: iup iupcd iupcontrols iupim iupimglib iup_pplot iupgl
-  my @iuptargets = qw[iup iupcd iupcontrols iupim iupimglib iup_pplot iupgl];
+  my @iuptargets = qw[iup iupcd iupcontrols iup_pplot iupgl iupim iupimglib iupweb iuptuio];
   @iuptargets = grep { $_ !~ /^(iupgl)$/ } @iuptargets unless $has{glx};
 
   #store debug info into ConfigData
@@ -281,9 +277,10 @@ sub build_via_tecmake {
   my ($self, $build_out, $srcdir, $mopts, $iuptgs, $cdtgs, $imtgs) = @_;
   $srcdir ||= 'src';
   my $prefixdir = rel2abs($build_out);
+
   my $make = $self->notes('gnu_make') || $self->get_make;
   die "###ERROR## make command not defined" unless $make;
-  my $im_si;
+
   my $success = 1;
 
   # save it for future use in ConfigData
@@ -301,14 +298,8 @@ sub build_via_tecmake {
     print STDERR "Gonna build 'im'\n";
     chdir "$srcdir/im/src";
     foreach my $t (@{$imtgs}) {
-      if ($self->notes('build_msgs')) {
-        $done{$t} = $self->run_output_std($make, $t, @{$mopts});
-      }
-      else {
-        $done{$t} = $self->run_output_on_error(undef, $make, $t, @{$mopts});
-      }
-      warn "###WARN### error [$?] during make $t" unless $done{$t};
-      $success = 0 unless $done{$t};
+      $done{"im:$t"} = $self->run_custom($make, $t, @{$mopts});
+      $success = 0 unless $done{"im:$t"};
     }
     copy($_, "$prefixdir/include/") foreach (glob("../include/*.h"));
     copy($_, "$prefixdir/lib/") foreach (glob("../lib/*/*"));
@@ -319,14 +310,8 @@ sub build_via_tecmake {
     print STDERR "Gonna build 'cd'\n";
     chdir "$srcdir/cd/src";
     foreach my $t (@{$cdtgs}) {
-      if ($self->notes('build_msgs')) {
-        $done{$t} = $self->run_output_std($make, $t, @{$mopts});
-      }
-      else {
-        $done{$t} = $self->run_output_on_error(undef, $make, $t, @{$mopts});
-      }
-      warn "###WARN### error [$?] during make $t" unless $done{$t};
-      $success = 0 unless $done{$t};
+      $done{"cd:$t"} = $self->run_custom($make, $t, @{$mopts});
+      $success = 0 unless $done{"cd:$t"};
     }
     copy($_, "$prefixdir/include/") foreach (glob("../include/*.h"));
     copy($_, "$prefixdir/lib/") foreach (glob("../lib/*/*"));
@@ -337,28 +322,21 @@ sub build_via_tecmake {
     print STDERR "Gonna build 'iup'\n";
     chdir "$srcdir/iup";
     foreach my $t (@{$iuptgs}) {
-      if ($self->notes('build_msgs')) {
-        $done{$t} = $self->run_output_std($make, $t, @{$mopts});
-      }
-      else {
-        $done{$t} = $self->run_output_on_error(undef, $make, $t, @{$mopts});
-      }
-      warn "###WARN### error [$?] during make $t" unless $done{$t};
-      $success = 0 unless $done{$t};
+      $done{"iup:$t"} = $self->run_custom($make, $t, @{$mopts});
+      $success = 0 unless $done{"iup:$t"};
     }
     copy($_, "$prefixdir/include/") foreach (glob("./include/*.h"));
     copy($_, "$prefixdir/lib/") foreach (glob("./lib/*/*"));
     chdir $self->base_dir();
   }
 
-  unless ($done{iup} && $done{iupim} && $done{iupcd}) {
+  unless ($done{"iup:iup"} && $done{"iup:iupim"} && $done{"iup:iupcd"}) {
     warn "###WARN### essential libs not built!";
     $success = 0;
   }
 
   print STDERR "Done: $done{$_} - $_\n" foreach (sort keys %done);
   $self->config_data('debug_done', \%done);
-  $self->config_data('debug_si', $im_si);
 
   return $success;
 }

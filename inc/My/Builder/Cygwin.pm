@@ -14,8 +14,13 @@ sub build_binaries {
   my ($self, $build_out, $srcdir) = @_;
   my $success = 1;
   
+  my @imtargets = qw[im im_process im_jp2 im_fftw];
+  my @cdtargets = qw[cd_freetype cd_ftgl cd cd_pdflib cdpdf cdgl];
+  my @iuptargets = qw[iup iupcd iupcontrols iup_pplot iupgl iupim iupimglib iupole iuptuio];
+  my @makeopts = qw[USE_NODEPEND=Yes];
+  
   #do the job
-  $success = $self->build_via_tecmake($build_out, $srcdir);
+  $success = $self->build_via_tecmake($build_out, $srcdir, \@makeopts, \@iuptargets, \@cdtargets, \@imtargets);
   warn "###MAKE FAILED###" unless $success;
 
   #make a list of libs necessary to link with IUP and related libraries
@@ -48,14 +53,9 @@ sub build_binaries {
 };
 
 sub build_via_tecmake {
-  my ($self, $build_out, $srcdir) = @_;
+  my ($self, $build_out, $srcdir, $mopts, $iuptgs, $cdtgs, $imtgs) = @_;
   my $prefixdir = rel2abs($build_out);
 
-  my @cdtgs = qw[cd_freetype cd_ftgl config cd_pdflib cdpdf cdgl]; #config = default target (libcd)
-  my @imtgs = qw[config im_process im_jp2 im_fftw]; #config = default target (libim)
-  my @iuptgs = qw[src srccd srccontrols srcpplot srcgl srcim srcimglib srcole]; #!!! srcweb fails
-
-  my $im_si;
   my $success = 1;
 
   # save it for future use in ConfigData
@@ -69,15 +69,13 @@ sub build_via_tecmake {
   my %done;
   my $tecuname = 'gcc4';
   #my $tecuname = 'dllg4';
-  my @basecmd = (qw[make -f ../tecmakewin.mak USE_NODEPEND=Yes], "TEC_UNAME=$tecuname");
+  my @basecmd = ("make", "TEC_UNAME=$tecuname");
 
   if(-d "$srcdir/im/src") {
     print STDERR "Gonna build 'im'\n";
     chdir "$srcdir/im/src";
-    # some debug info
-    $im_si = $self->run_output_std(@basecmd, 'sysinfo') if $self->notes('build_debug_info');    
-    foreach my $t (@imtgs) {
-      $done{"im:$t"} = $self->run_custom(@basecmd, "MF=$t");
+    foreach my $t (@$imtgs) {
+      $done{"im:$t"} = $self->run_custom(@basecmd, @$mopts, $t);
       $success = 0 unless $done{"im:$t"};
     }
     copy($_, "$prefixdir/include/") foreach (glob("../include/*.h"));
@@ -88,8 +86,8 @@ sub build_via_tecmake {
   if (-d "$srcdir/cd/src") {
     print STDERR "Gonna build 'cd'\n";
     chdir "$srcdir/cd/src";
-    foreach my $t (@cdtgs) {
-      $done{"cd:$t"} = $self->run_custom(@basecmd, "MF=$t");
+    foreach my $t (@$cdtgs) {
+      $done{"cd:$t"} = $self->run_custom(@basecmd, @$mopts, $t);
       $success = 0 unless $done{"cd:$t"};
     }
     copy($_, "$prefixdir/include/") foreach (glob("../include/*.h"));
@@ -99,14 +97,11 @@ sub build_via_tecmake {
 
   if (-d "$srcdir/iup") {
     print STDERR "Gonna build 'iup'\n";    
-    foreach my $t (@iuptgs) {
-      print STDERR "changing dir '$srcdir/iup/$t'\n";    
-      chdir "$srcdir/iup/$t";
-      $done{"iup:$t"} = $self->run_custom(@basecmd);
-      $success = 0 unless $done{"iup:$t"};
-      chdir $self->base_dir();
-    }
     chdir "$srcdir/iup";
+    foreach my $t (@$iuptgs) {
+      $done{"iup:$t"} = $self->run_custom(@basecmd, @$mopts, $t);
+      $success = 0 unless $done{"iup:$t"};
+    }
     copy($_, "$prefixdir/include/") foreach (glob("./include/*.h"));
     copy($_, "$prefixdir/lib/") foreach (glob("./lib/$tecuname/*"));
     chdir $self->base_dir();
@@ -114,7 +109,6 @@ sub build_via_tecmake {
 
   print STDERR "Done: $done{$_} - $_\n" foreach (sort keys %done);
   $self->config_data('debug_done', \%done);
-  $self->config_data('debug_si', $im_si);
   
   return $success;
 }
