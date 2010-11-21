@@ -196,8 +196,8 @@ sub build_binaries {
   print STDERR "Build target=", ($build_target || ''), "\n";  
   if ($build_target eq 'GTK2') {
     push(@makeopts, 'USE_GTK=Yes');
+    push(@makeopts, 'USE_PKGCONFIG=Yes');
     #detected libs
-#xxx    push(@makeopts, "GTK_BASE=$dir_gtk") if $dir_gtk;
     push(@makeopts, "X11_LIBS=" . join(' ', @x11_libs));
     push(@makeopts, "X11_LIB=$dir_x11_lib") if $dir_x11_lib;
     push(@makeopts, "X11_INC=$dir_x11_inc") if $dir_x11_inc;

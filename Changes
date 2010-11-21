@@ -1,5 +1,9 @@
 =head1 Revision history for Alien-IUP
 
+=head2 0.1000_04 - 21/11/2010
+
+ - fixing netbsd failure (using USE_PKGCONFIG)
+
 =head2 0.1000_03 - 21/11/2010
 
  - webkit/webkit.h test (disabling iupweb if no webkit)
