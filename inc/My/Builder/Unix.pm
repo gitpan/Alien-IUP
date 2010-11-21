@@ -76,12 +76,12 @@ sub build_binaries {
   }
   my %has;
 
-  $has{gtk}     = `pkg-config --modversion gtk+-2.0 2>/dev/null` ? 1 : 0;        #iupgtk
+  $has{gtk}     = `pkg-config --modversion gtk+-2.0 2>/dev/null` ? 1 : 0;
   $has{gtkx11}  = `pkg-config --modversion gtk+-x11-2.0 2>/dev/null` ? 1 : 0;
-  $has{gdk}     = `pkg-config --modversion gdk-2.0 2>/dev/null` ? 1 : 0;        #cdgdk
+  $has{gdk}     = `pkg-config --modversion gdk-2.0 2>/dev/null` ? 1 : 0;
   $has{gdkx11}  = `pkg-config --modversion gdk-x11-2.0 2>/dev/null` ? 1 : 0;
-  $has{cairo}   = `pkg-config --modversion cairo 2>/dev/null` ? 1 : 0;                 #cdcairo
-  $has{pango}   = `pkg-config --modversion pango 2>/dev/null` ? 1 : 0;                #cdcairo
+  $has{cairo}   = `pkg-config --modversion cairo 2>/dev/null` ? 1 : 0;
+  $has{pango}   = `pkg-config --modversion pango 2>/dev/null` ? 1 : 0;
   #$has{pangox}  = `pkg-config --modversion pangox 2>/dev/null` ? 1 : 0;
 
   $has{l_gtk}   = $has{gtk}    && $self->check_lib( [] , `pkg-config --cflags gtk+-2.0 2>/dev/null`,     `pkg-config --libs gtk+-2.0 2>/dev/null`);
@@ -89,7 +89,7 @@ sub build_binaries {
   $has{l_gdk}   = $has{gdk}    && $self->check_lib( [] , `pkg-config --cflags gdk-2.0 2>/dev/null`,      `pkg-config --libs gdk-2.0 2>/dev/null`);
   $has{l_gdkx11}= $has{gdkx11} && $self->check_lib( [] , `pkg-config --cflags gdk-x11-2.0 2>/dev/null`,  `pkg-config --libs gdk-x11-2.0 2>/dev/null`);
   $has{l_cairo} = $has{cairo}  && $self->check_lib( [] , `pkg-config --cflags cairo 2>/dev/null`,        `pkg-config --libs cairo 2>/dev/null`);
-  $has{l_pango} = $has{pango}  && $self->check_lib( [] , `pkg-config --cflags pango 2>/dev/null`,        `pkg-config --libs pango 2>/dev/null`);
+  $has{l_pango} = $has{pango}  && $self->check_lib( [] , `pkg-config --cflags pango 2>/dev/null`,        `pkg-config --libs pango 2>/dev/null`);  
   #$has{l_pangox}= $has{pangox} && $self->check_lib( [] , `pkg-config --cflags pangox 2>/dev/null`,       `pkg-config --libs pangox 2>/dev/null`);
 
   $has{l_Xp}    = $self->check_lib( 'Xp',   $extra_cflags, $extra_lflags );
@@ -107,6 +107,8 @@ sub build_binaries {
   $has{glx}     = $self->check_header('GL/glx.h',  $extra_cflags); #iupgl
   $has{glu}     = $self->check_header('GL/glu.h',  $extra_cflags);
   $has{gl}      = $self->check_header('GL/gl.h',   $extra_cflags);
+  
+  $has{webkit}  = $self->check_header('webkit/webkit.h',   $extra_cflags); #xxx TODO not tested properly
 
   if ($self->notes('build_debug_info')) {
     print STDERR "Has: $has{$_} - $_\n" foreach (sort keys %has);
@@ -153,6 +155,7 @@ sub build_binaries {
   #possible targets: iup iupcd iupcontrols iupim iupimglib iup_pplot iupgl
   my @iuptargets = qw[iup iupcd iupcontrols iup_pplot iupgl iupim iupimglib iupweb iuptuio];
   @iuptargets = grep { $_ !~ /^(iupgl)$/ } @iuptargets unless $has{glx};
+  @iuptargets = grep { $_ !~ /^(iupweb)$/ } @iuptargets unless $has{webkit};
 
   #store debug info into ConfigData
   $self->config_data('debug_has', \%has);

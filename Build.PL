@@ -86,11 +86,11 @@ $builder->notes('iup_patches', [ 'patches/iup-3.3.diff' ] );
 
 $builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.3_Sources.tar.gz');
 $builder->notes('im_sha1', '93f5e1fef25d9ac42a8c3a628411156b695cd7d1');
-$builder->notes('im_patches', [ 'patches/im-3.6.3.diff' ] );
+$builder->notes('im_patches', [ 'patches/im-3.6.3.diff', 'patches/im-dragonfly.diff' ] );
 
 $builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.4.1_Sources.tar.gz');
 $builder->notes('cd_sha1', 'b771752f253ab3bf6ee8c4bea228d5d16f4352ec');
-#$builder->notes('cd_patches', [ 'patches/cd.diff' ] );
+$builder->notes('cd_patches', [ 'patches/cd-dragonfly.diff' ] );
 
 # check if we have GNU make otherwise 'exit 0' - cpan testers will report "N/A"
 my $m = $builder->get_make;

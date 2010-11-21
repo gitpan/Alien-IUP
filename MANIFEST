@@ -7,7 +7,9 @@ inc/My/Builder/Windows.pm
 lib/Alien/IUP.pm
 MANIFEST			This list of files
 META.yml
+patches/cd-dragonfly.diff
 patches/im-3.6.3.diff
+patches/im-dragonfly.diff
 patches/iup-3.3.diff
 patches/Makefile_cd.mingw
 patches/Makefile_cd.nmake
