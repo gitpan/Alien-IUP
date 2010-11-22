@@ -108,6 +108,9 @@ sub build_binaries {
   $has{glu}     = $self->check_header('GL/glu.h',  $extra_cflags);
   $has{gl}      = $self->check_header('GL/gl.h',   $extra_cflags);
   
+  #kind of a special hack
+  $has{freetype} = $self->check_header('ft2build.h', `pkg-config --cflags gtk+-2.0 gdk-2.0 2>/dev/null`);
+  
   $has{webkit}  = $self->check_header('webkit/webkit.h',   $extra_cflags); #xxx TODO not tested properly
 
   if ($self->notes('build_debug_info')) {
@@ -144,7 +147,7 @@ sub build_binaries {
   #possible targets: im im_process im_jp2 im_fftw im_capture im_avi im_wmv im_fftw3 im_ecw
   my @imtargets = qw[im im_process im_jp2 im_fftw];
   if ($^O eq 'openbsd') {
-    warn "###WARN### im_process is known to fail on OpenBSD";
+    warn "###WARN### im_process is known to fail on some OpenBSD!!!";
 #    warn "###WARN### skipping im_process on OpenBSD";
 #    @imtargets = grep { $_ !~ /^(im_process)$/ } @imtargets;
   }
@@ -198,6 +201,12 @@ sub build_binaries {
   if ($build_target eq 'GTK2') {
     push(@makeopts, 'USE_GTK=Yes');
     push(@makeopts, 'USE_PKGCONFIG=Yes');
+
+    if ($has{freetype}) {
+      #handle existing freetype
+      @cdtargets = grep { $_ !~ /^(cd_freetype)$/ } @cdtargets;
+    }
+    
     #detected libs
     push(@makeopts, "X11_LIBS=" . join(' ', @x11_libs));
     push(@makeopts, "X11_LIB=$dir_x11_lib") if $dir_x11_lib;
