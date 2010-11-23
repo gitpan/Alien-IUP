@@ -59,7 +59,7 @@ my $builder = $package->new(
     'IPC::Run3'         => 0.041, # we need return_if_system_error
   },
   share_dir          => 'sharedir',
-  add_to_cleanup     => [ 'Alien-IUP-*', 'build_done', 'build_src' ],
+  add_to_cleanup     => [ 'Alien-IUP-*' ],
   #create_makefile_pl => 'small', # creating Makefile.PL to satisfy old CPAN clients (does not work well with our style of M::B use)
   create_readme      => 1,
   meta_merge => {
@@ -71,7 +71,10 @@ my $builder = $package->new(
 );
 
 unlink 'build_done'; # delete build marker (= force rebuild after running Build.PL)
-
+$builder->add_to_cleanup("sharedir/" . $builder->{properties}->{dist_version}); # catfile() would be better
+$builder->add_to_cleanup('build_done');
+$builder->add_to_cleanup('build_src');
+      
 if ($builder->check_installed_lib()) {
   my $ans = $builder->prompt("\nIUP detected, wanna use IUP already installed on your system (y/n)?", 'y');
   $builder->notes('already_installed_lib', undef) unless (lc($ans) eq 'y');  
@@ -82,11 +85,15 @@ $builder->notes('build_debug_info', lc($builder->prompt("\nWanna see more debug 
 # set what tarballs we are gonna use
 $builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.3_Sources.tar.gz');
 $builder->notes('iup_sha1', '6ce0badbad9e27131010bf6fd296b1d5c8eda0a8');
-$builder->notes('iup_patches', [ 'patches/iup-3.3.diff', 'patches/iup-tuio-ms64bit.diff' ] );
+$builder->notes('iup_patches', [ 'patches/iup-long-long.diff', 
+                                 'patches/iup-tuio-ms64bit.diff', 
+                                 'patches/iup-tuio-ntohl.diff',
+                                 'patches/iup-WIN32_WINNT.diff' ] );
 
 $builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.3_Sources.tar.gz');
 $builder->notes('im_sha1', '93f5e1fef25d9ac42a8c3a628411156b695cd7d1');
-$builder->notes('im_patches', [ 'patches/im-3.6.3.diff', 'patches/im-dragonfly.diff' ] );
+$builder->notes('im_patches', [ 'patches/im-int64.diff',
+                                'patches/im-dragonfly.diff' ] );
 
 $builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.4.1_Sources.tar.gz');
 $builder->notes('cd_sha1', 'b771752f253ab3bf6ee8c4bea228d5d16f4352ec');
