@@ -4,15 +4,14 @@ IMPORTANT
 - [fixed] UNIX cairo/cdcairoprn_unix.c:13:36: error: gtk/gtkprintunixdialog.h: No such file or directory
 - [fixed] print GTK version in build log
 - [fixed] Do you want STABLE or UNSTABLE (devel version from CVS) build [STABLE]?
-
-- Win: check removing old sharedir content on MSWin (ActivePerl)
-
-- BSD
+- [fixed] BSD http://www.cpantesters.org/cpan/report/ec6300d2-fb91-11df-a694-e2b03d723d5a
 im_format_jp2.cpp: In function 'void imFormatRegisterJP2()':
 im_format_jp2.cpp:175: error: 'jas_progress_proc_t' was not declared in this scope
 im_format_jp2.cpp:175: error: 'jas_set_progress_proc' was not declared in this scope
 im_format_jp2.cpp:176: error: 'jas_test_abort_proc_t' was not declared in this scope
 im_format_jp2.cpp:176: error: 'jas_set_test_abort_proc' was not declared in this scope
+
+- Win: check removing old sharedir content on MSWin (ActivePerl)
 
 - Win: disable ftgl and iuptuio on VC6
   ($Config{ccversion} =~ /^12\./)
@@ -20,7 +19,7 @@ im_format_jp2.cpp:176: error: 'jas_set_test_abort_proc' was not declared in this
 
 - Unix: disable iuptuio on cygwin/gcc-3.4.4
   Unix: ($^O eq 'cygwin' && $Config{gccversion} =~ /^3\.4\.4/)
-
+  
 MEDIUM PRIORITY
 - generate makefiles for contextplus/iupweb
 - enable contextplus - MS compiler or cygwin/gdiplus (maybe gdiplus detection)
@@ -45,5 +44,5 @@ ERRORS TO BE REPORTED TO TECGRAF
 - (reported-wontfix) Dragonfly BSD: sizeof(FILE) not allowed - http://www.cpantesters.org/cpan/report/6b2b31dc-cc67-11df-87cd-1c8c4afd17af
 - (reported-wontfix) OpenBSD - im_process g++ crash - http://www.cpantesters.org/cpan/report/90fda052-c9d8-11df-87cd-1c8c4afd17af
 - (reported-wontfix) MSVC6 - cd: FTCharmap.cpp ./ftgl/FTFace.h(171) : error C2258: illegal pure syntax, must be '= 0' ...
-- (reported) MSVC6 - iuptuio fails
-- (reported) Cygwin - iuptuio fails (gcc3)
+- (reported-wintfix) MSVC6 - iuptuio fails
+- (reported-wintfix) Cygwin - iuptuio fails (gcc3)
