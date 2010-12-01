@@ -1,5 +1,9 @@
 =head1 Revision history for Alien-IUP
 
+=head2 0.104 - 01/12/2010
+
+ - updated iup-GTK_WIDGET.diff 
+
 =head2 0.103 - 01/12/2010
 
  - Motif/X11 build fix
