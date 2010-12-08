@@ -1,5 +1,9 @@
 =head1 Revision history for Alien-IUP
 
+=head2 0.108 - 08/12/2010
+
+ - info.t fix
+
 =head2 0.107 - 07/12/2010
 
  - iuptuio target added (Unix.pm)
