@@ -104,6 +104,11 @@ sub build_binaries {
     printf STDERR ("mod:% 20s version:% 9s prefix:%s\n", $list{$_}, $v, $p) if $self->notes('build_debug_info');
   }
 
+  #detect pkg-config
+  my $pkgcfg = $self->run_stdout2str(qw[pkg-config --version]);
+  $has{'pkg-config'} = $pkgcfg ? 1 : 0;
+  $has_details{'pkg-config'} = { version=>$pkgcfg, prefix=>$self->run_stdout2str(qw[which pkg-config]) };
+  
   $has{l_gtk}   = $has{gtk}    && $self->check_lib( [] , `pkg-config --cflags gtk+-2.0 2>/dev/null`,     `pkg-config --libs gtk+-2.0 2>/dev/null`);
   $has{l_gtkx11}= $has{gtkx11} && $self->check_lib( [] , `pkg-config --cflags gtk+-x11-2.0 2>/dev/null`, `pkg-config --libs gtk+-x11-2.0 2>/dev/null`);
   $has{l_gdk}   = $has{gdk}    && $self->check_lib( [] , `pkg-config --cflags gdk-2.0 2>/dev/null`,      `pkg-config --libs gdk-2.0 2>/dev/null`);
@@ -207,7 +212,21 @@ sub build_binaries {
   }
 
   if ($self->notes('build_debug_info') || !$build_target) {
-    print STDERR "has: $has{$_} - $_\n" foreach (sort keys %has);
+    foreach (sort keys %has) {
+      my $msg = "has: $has{$_} - $_";
+      $msg .= "; version=" . $has_details{$_}->{version} if $has_details{$_}->{version};
+      $msg .= "; prefix="  . $has_details{$_}->{prefix}  if $has_details{$_}->{prefix};
+      print STDERR $msg, "\n";
+    }
+
+    print STDERR "Dumping some pkg-info:\n";
+    print STDERR "[gtk2 cflags] " . $self->run_stdout2str(qw[pkg-config --cflags gtk+-2.0]) . "\n";
+    print STDERR "[gtk2 libs  ] " . $self->run_stdout2str(qw[pkg-config --libs gtk+-2.0]) . "\n";
+    for my $pkg (qw[gtk+-2.0 gl glu glut x11 xt xext xmu]) {
+      print STDERR "[prefix     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=prefix], $pkg) . "\n";
+      print STDERR "[libdir     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=libdir], $pkg) . "\n";
+      print STDERR "[includedir $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=includedir], $pkg) . "\n";
+    }
 
     print STDERR "Brute force lookup:\n";
     my $re = qr/\/(Xlib.h|Xm.h|gtk.h|cairo.h|glu.h|glut.h|gl.h|freetype.h|gtkprintunixdialog.h|jasper.h|jas_image.h|lib(X11|GL|Xm|freetype)\.[^\d]*)$/;
@@ -218,15 +237,6 @@ sub build_binaries {
     print STDERR "[/System ] $_\n" foreach ($self->find_file('/System', $re));
     print STDERR "[/Library] $_\n" foreach ($self->find_file('/Library', $re));
     print STDERR "[/Network] $_\n" foreach ($self->find_file('/Network', $re));
-
-    print STDERR "Dumping some pkg-info:\n";
-    print STDERR "[gtk2 cflags] " . $self->run_stdout2str(qw[pkg-config --cflags gtk+-2.0]) . "\n";
-    print STDERR "[gtk2 libs  ] " . $self->run_stdout2str(qw[pkg-config --libs gtk+-2.0]) . "\n";
-    for my $pkg (qw[gtk+-2.0 gl glu glut x11 xt xext xmu]) {
-      print STDERR "[prefix     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=prefix], $pkg) . "\n";
-      print STDERR "[libdir     $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=libdir], $pkg) . "\n";
-      print STDERR "[includedir $pkg] " . $self->run_stdout2str(qw[pkg-config --variable=includedir], $pkg) . "\n";
-    }
   }
   
   unless ($build_target) {
