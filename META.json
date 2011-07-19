@@ -1,0 +1,82 @@
+{
+   "abstract" : "Building, finding and using iup + related libraries - L<http://www.tecgraf.puc-rio.br/iup/>",
+   "author" : [
+      "KMX, kmx@cpan.org"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110580",
+   "license" : [
+      "mit"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Alien-IUP",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Archive::Extract" : 0,
+            "Digest::SHA" : 0,
+            "ExtUtils::CBuilder" : 0,
+            "ExtUtils::Command" : 0,
+            "ExtUtils::Liblist" : 0,
+            "File::Find" : 0,
+            "File::Path" : 0,
+            "File::ShareDir" : 0,
+            "File::Spec" : 0,
+            "File::Temp" : 0,
+            "IPC::Run3" : "0.041",
+            "LWP::Simple" : 0,
+            "Test::More" : 0,
+            "Text::Patch" : 0,
+            "perl" : "5.008008"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Archive::Extract" : 0,
+            "Digest::SHA" : 0,
+            "ExtUtils::CBuilder" : 0,
+            "ExtUtils::Command" : 0,
+            "ExtUtils::Liblist" : 0,
+            "File::Find" : 0,
+            "File::Path" : 0,
+            "File::ShareDir" : 0,
+            "File::Spec" : 0,
+            "File::Temp" : 0,
+            "IPC::Run3" : "0.041",
+            "LWP::Simple" : 0,
+            "Module::Build" : "0.38",
+            "Text::Patch" : 0,
+            "perl" : "5.008008"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "File::ShareDir" : "1.00",
+            "File::Spec" : 0,
+            "perl" : "5.008008"
+         }
+      }
+   },
+   "provides" : {
+      "Alien::IUP" : {
+         "file" : "lib/Alien/IUP.pm",
+         "version" : "0.301_3"
+      }
+   },
+   "release_status" : "testing",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP"
+      },
+      "license" : [
+         "http://www.opensource.org/licenses/mit-license.php"
+      ],
+      "repository" : {
+         "url" : "http://github.com/kmx/alien-iup"
+      }
+   },
+   "version" : "0.301_3"
+}
