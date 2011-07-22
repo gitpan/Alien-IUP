@@ -63,10 +63,10 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.301_3"
+         "version" : "0.302"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP"
@@ -78,5 +78,5 @@
          "url" : "http://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.301_3"
+   "version" : "0.302"
 }
