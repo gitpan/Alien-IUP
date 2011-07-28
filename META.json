@@ -63,10 +63,10 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.302"
+         "version" : "0.302_1"
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP"
@@ -75,8 +75,8 @@
          "http://www.opensource.org/licenses/mit-license.php"
       ],
       "repository" : {
-         "url" : "http://github.com/kmx/alien-iup"
+         "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.302"
+   "version" : "0.302_1"
 }
