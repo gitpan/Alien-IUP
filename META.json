@@ -63,7 +63,7 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.302_2"
+         "version" : "0.302_3"
       }
    },
    "release_status" : "testing",
@@ -78,5 +78,5 @@
          "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.302_2"
+   "version" : "0.302_3"
 }
