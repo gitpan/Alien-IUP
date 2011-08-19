@@ -14,12 +14,12 @@ Alien::IUP - Building, finding and using iup + related libraries - L<http://www.
 =cut
 
 # following recommendation from http://www.dagolden.com/index.php/369/version-numbers-should-be-boring/
-our $VERSION = "0.303";
+our $VERSION = "0.304";
 $VERSION = eval $VERSION;
 
 =head1 VERSION
 
-Version 0.303 of Alien::IUP is based on the following:
+Version 0.304 of Alien::IUP is based on the following:
 
 =over
 
@@ -75,7 +75,7 @@ I<iup> and/or related libs like this:
    # + additional params
  );
 
-B<IMPORTANT:> As Alien::IUP builds static libraries the modules using Alien::IUP (e.g. L<IUP|http://github.com/kmx/perl-iup>)
+B<IMPORTANT:> As Alien::IUP builds static libraries the modules using Alien::IUP (e.g. L<IUP|IUP>)
 need to have Alien::IUP just for building, not for later use. In other words Alien:IUP is just
 "build dependency" not "run-time dependency".
 

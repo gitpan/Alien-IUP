@@ -30,6 +30,7 @@ my $builder = $package->new(
   },
   configure_requires => {
     'perl'              => 5.008008,
+    'Module::Build'     => 0.36,
     'File::ShareDir'    => 0,
     'File::Spec'        => 0,
     'File::Path'        => 0,
@@ -46,6 +47,7 @@ my $builder = $package->new(
   },
   build_requires => {
     'perl'              => 5.008008,
+    'Module::Build'     => 0.36,
     'Test::More'        => 0,
     'File::ShareDir'    => 0,
     'File::Spec'        => 0,
@@ -102,7 +104,7 @@ else {
   # set what tarballs we are gonna use
   $builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.5_Sources.tar.gz');
   $builder->notes('iup_sha1', 'e5a3fdde13dcf77eeb5e690b21ff198389b1e889');
-  $builder->notes('iup_patches', [ qw!patches/iup-kfreebsd.diff! ] );
+  $builder->notes('iup_patches', [ qw!patches/iup-kfreebsd.diff patches/iup-cygwin.diff! ] );
 
   $builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.6.3_Sources.tar.gz');
   $builder->notes('im_sha1', '14a800e3e1642acb97c569bd7f50d413fa375d5a');

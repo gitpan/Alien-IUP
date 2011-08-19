@@ -28,6 +28,7 @@
             "File::Temp" : 0,
             "IPC::Run3" : "0.041",
             "LWP::Simple" : 0,
+            "Module::Build" : "0.36",
             "Test::More" : 0,
             "Text::Patch" : 0,
             "perl" : "5.008008"
@@ -47,7 +48,7 @@
             "File::Temp" : 0,
             "IPC::Run3" : "0.041",
             "LWP::Simple" : 0,
-            "Module::Build" : "0.38",
+            "Module::Build" : "0.36",
             "Text::Patch" : 0,
             "perl" : "5.008008"
          }
@@ -63,7 +64,7 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.303"
+         "version" : "0.304"
       }
    },
    "release_status" : "stable",
@@ -78,5 +79,5 @@
          "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.303"
+   "version" : "0.304"
 }
