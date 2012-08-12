@@ -1,0 +1,16 @@
+diff -ru im/src/libexif/_stdint.h im.patched/src/libexif/_stdint.h
+--- im/src/libexif/_stdint.h	2005-04-09 14:36:05.000000000 +0200
++++ im.patched/src/libexif/_stdint.h	2012-08-12 22:10:31.684376500 +0200
+@@ -2,7 +2,11 @@
+ #ifndef __STDINT_H
+ #define __STDINT_H
+ 
+-#ifndef __int8_t_defined
++/* on Solaris do not typedef int8_t, as it will cause an error: 
++ * /usr/include/sys/int_types.h:75: error: 'int8_t' has a previous declaration as 'typedef char int8_t'
++ */
++
++#if !defined(__int8_t_defined) && !defined(__sun__)
+ #define __int8_t_defined
+ typedef signed char int8_t;
+ typedef short int16_t;
