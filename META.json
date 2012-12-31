@@ -4,7 +4,7 @@
       "KMX, kmx@cpan.org"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112621",
+   "generated_by" : "Module::Build version 0.4002, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "mit"
    ],
@@ -16,47 +16,47 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Archive::Extract" : 0,
-            "Digest::SHA" : 0,
-            "ExtUtils::CBuilder" : 0,
-            "ExtUtils::Command" : 0,
-            "ExtUtils::Liblist" : 0,
-            "File::Find" : 0,
-            "File::Path" : 0,
-            "File::ShareDir" : 0,
-            "File::Spec" : 0,
-            "File::Temp" : 0,
+            "Archive::Extract" : "0",
+            "Digest::SHA" : "0",
+            "ExtUtils::CBuilder" : "0",
+            "ExtUtils::Command" : "0",
+            "ExtUtils::Liblist" : "0",
+            "File::Find" : "0",
+            "File::Path" : "0",
+            "File::ShareDir" : "0",
+            "File::Spec" : "0",
+            "File::Temp" : "0",
             "IPC::Run3" : "0.041",
-            "LWP::Simple" : 0,
+            "LWP::Simple" : "0",
             "Module::Build" : "0.36",
-            "Test::More" : 0,
-            "Text::Patch" : 0,
+            "Test::More" : "0",
+            "Text::Patch" : "0",
             "perl" : "5.008008"
          }
       },
       "configure" : {
          "requires" : {
-            "Archive::Extract" : 0,
-            "Digest::SHA" : 0,
-            "ExtUtils::CBuilder" : 0,
-            "ExtUtils::Command" : 0,
-            "ExtUtils::Liblist" : 0,
-            "File::Find" : 0,
-            "File::Path" : 0,
-            "File::ShareDir" : 0,
-            "File::Spec" : 0,
-            "File::Temp" : 0,
+            "Archive::Extract" : "0",
+            "Digest::SHA" : "0",
+            "ExtUtils::CBuilder" : "0",
+            "ExtUtils::Command" : "0",
+            "ExtUtils::Liblist" : "0",
+            "File::Find" : "0",
+            "File::Path" : "0",
+            "File::ShareDir" : "0",
+            "File::Spec" : "0",
+            "File::Temp" : "0",
             "IPC::Run3" : "0.041",
-            "LWP::Simple" : 0,
+            "LWP::Simple" : "0",
             "Module::Build" : "0.36",
-            "Text::Patch" : 0,
+            "Text::Patch" : "0",
             "perl" : "5.008008"
          }
       },
       "runtime" : {
          "requires" : {
             "File::ShareDir" : "1.00",
-            "File::Spec" : 0,
+            "File::Spec" : "0",
             "perl" : "5.008008"
          }
       }
@@ -64,10 +64,10 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.400_6"
+         "version" : "0.401"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP"
@@ -79,5 +79,5 @@
          "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.400_6"
+   "version" : "0.401"
 }
