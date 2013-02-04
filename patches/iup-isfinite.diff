@@ -1,0 +1,15 @@
+diff -ru --strip-trailing-cr iup.orig/srcmglplot/mgl/mgl_define.h iup/srcmglplot/mgl/mgl_define.h
+--- iup.orig/srcmglplot/mgl/mgl_define.h	2013-02-02 13:03:12.319815200 +0100
++++ iup/srcmglplot/mgl/mgl_define.h	2013-02-04 13:13:45.087094000 +0100
+@@ -48,6 +48,11 @@
+ #endif
+ #endif
+ 
++/* kmx hack for: error: 'isfinite' was not declared in this scope [solaris 5.11/11.0 + gcc-4.5.2]*/
++#if defined(__sun__) && !defined(isfinite)
++#define isfinite _finite
++#endif
++
+ #ifndef M_PI
+ #define M_PI	3.14159265358979323846  /* pi */
+ #endif
