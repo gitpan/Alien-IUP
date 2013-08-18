@@ -63,7 +63,7 @@ sub ACTION_code {
 
       # prepare sources
       my $unpack;
-      $unpack = (-d "$build_src/iup") ? $self->prompt("\nDir '$build_src/iup' exists, wanna replace with clean sources?", "n") : 'y';
+      $unpack = (-d "$build_src/iup") && !$ENV{TRAVIS} ? $self->prompt("\nDir '$build_src/iup' exists, wanna replace with clean sources?", "n") : 'y';
       if (lc($unpack) eq 'y') {
         File::Path::rmtree("$build_src/iup") if -d "$build_src/iup";
         $self->prepare_sources($self->notes('iup_url'), $self->notes('iup_sha1'), $download, $build_src);
@@ -72,7 +72,7 @@ sub ACTION_code {
         }
       }
 
-      $unpack = (-d "$build_src/im") ? $self->prompt("\nDir '$build_src/im'  exists, wanna replace with clean sources?", "n") : 'y';
+      $unpack = (-d "$build_src/im") && !$ENV{TRAVIS} ? $self->prompt("\nDir '$build_src/im'  exists, wanna replace with clean sources?", "n") : 'y';
       if (lc($unpack) eq 'y') {
         File::Path::rmtree("$build_src/im") if -d "$build_src/im";
         $self->prepare_sources($self->notes('im_url'), $self->notes('im_sha1'), $download, $build_src);
@@ -81,7 +81,7 @@ sub ACTION_code {
         }
       }
 
-      $unpack = (-d "$build_src/cd") ? $self->prompt("\nDir '$build_src/cd'  exists, wanna replace with clean sources?", "n") : 'y';
+      $unpack = (-d "$build_src/cd") && !$ENV{TRAVIS} ? $self->prompt("\nDir '$build_src/cd'  exists, wanna replace with clean sources?", "n") : 'y';
       if (lc($unpack) eq 'y') {
         File::Path::rmtree("$build_src/cd") if -d "$build_src/cd";
         $self->prepare_sources($self->notes('cd_url'), $self->notes('cd_sha1'), $download, $build_src);
@@ -100,10 +100,10 @@ sub ACTION_code {
         }
       }
 
-      my $m = $self->notes('build_debug_info') ? $self->prompt("\nDo you want to see all messages during 'make' (y/n)?", 'n') : 'n';
+      my $m = $self->notes('build_debug_info') && !$ENV{TRAVIS} ? $self->prompt("\nDo you want to see all messages during 'make' (y/n)?", 'n') : 'n';
       $self->notes('build_msgs', lc($m) eq 'y' ? 1 : 0);
       
-      my $large_imglib = lc($self->prompt("Do you wanna compile built-in images with large (48x48) size? ", "y"));
+      my $large_imglib = $ENV{TRAVIS} ? 'y' : lc($self->prompt("Do you wanna compile built-in images with large (48x48) size? ", "y"));
       $self->notes('build_large_imglib', lc($large_imglib) eq 'y' ? 1 : 0);
 
       # go for build
@@ -282,8 +282,8 @@ sub check_header {
   $cflags ||= '';
   my @header = ref($h) ? @$h : ( $h );
 
-  my ($fs, $src) = tempfile('tmpfileXXXXXXaa', SUFFIX => '.c', UNLINK => 1);
-  my ($fo, $obj) = tempfile('tmpfileXXXXXXaa', SUFFIX => '.o', UNLINK => 1);
+  my ($fs, $src) = tempfile('tmpfileXXXXXX', SUFFIX => '.c', UNLINK => 1);
+  my ($fo, $obj) = tempfile('tmpfileXXXXXX', SUFFIX => '.o', UNLINK => 1);
   my $inc = '';
   $inc .= "#include <$_>\n" foreach @header;
   syswrite($fs, <<MARKER); # write test source code
@@ -309,9 +309,9 @@ sub check_lib {
   my @libs = ref($l) ? @$l : ( $l );
   my $liblist = scalar(@libs) ? '-l' . join(' -l', @libs) : '';
 
-  my ($fs, $src) = tempfile('tmpfileXXXXXXaa', SUFFIX => '.c', UNLINK => 1);
-  my ($fo, $obj) = tempfile('tmpfileXXXXXXaa', SUFFIX => '.o', UNLINK => 1);
-  my ($fe, $exe) = tempfile('tmpfileXXXXXXaa', SUFFIX => '.out', UNLINK => 1);
+  my ($fs, $src) = tempfile('tmpfileXXXXXX', SUFFIX => '.c', UNLINK => 1);
+  my ($fo, $obj) = tempfile('tmpfileXXXXXX', SUFFIX => '.o', UNLINK => 1);
+  my ($fe, $exe) = tempfile('tmpfileXXXXXX', SUFFIX => '.out', UNLINK => 1);
   syswrite($fs, <<MARKER); # write test source code
 int main() { return 0; }
 

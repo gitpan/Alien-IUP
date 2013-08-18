@@ -25,7 +25,7 @@
             "File::Path" : "0",
             "File::ShareDir" : "0",
             "File::Spec" : "0",
-            "File::Temp" : "0",
+            "File::Temp" : "0.22",
             "IPC::Run3" : "0.041",
             "LWP::Simple" : "0",
             "Module::Build" : "0.36",
@@ -64,7 +64,7 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.502_2"
+         "version" : "0.502_3"
       }
    },
    "release_status" : "testing",
@@ -79,5 +79,5 @@
          "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.502_2"
+   "version" : "0.502_3"
 }

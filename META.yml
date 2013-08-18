@@ -12,7 +12,7 @@ build_requires:
   File::Path: 0
   File::ShareDir: 0
   File::Spec: 0
-  File::Temp: 0
+  File::Temp: 0.22
   IPC::Run3: 0.041
   LWP::Simple: 0
   Module::Build: 0.36
@@ -45,7 +45,7 @@ name: Alien-IUP
 provides:
   Alien::IUP:
     file: lib/Alien/IUP.pm
-    version: 0.502_2
+    version: 0.502_3
 requires:
   File::ShareDir: 1.00
   File::Spec: 0
@@ -54,4 +54,4 @@ resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Alien-IUP
   license: http://www.opensource.org/licenses/mit-license.php
   repository: https://github.com/kmx/alien-iup
-version: 0.502_2
+version: 0.502_3
