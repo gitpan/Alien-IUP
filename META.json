@@ -4,7 +4,7 @@
       "KMX, kmx@cpan.org"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4004, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4007, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "mit"
    ],
@@ -64,7 +64,7 @@
    "provides" : {
       "Alien::IUP" : {
          "file" : "lib/Alien/IUP.pm",
-         "version" : "0.502_1"
+         "version" : "0.502_2"
       }
    },
    "release_status" : "testing",
@@ -79,5 +79,5 @@
          "url" : "https://github.com/kmx/alien-iup"
       }
    },
-   "version" : "0.502_1"
+   "version" : "0.502_2"
 }
