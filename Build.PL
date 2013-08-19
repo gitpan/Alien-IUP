@@ -99,20 +99,22 @@ else {
     my $ans = $ENV{TRAVIS} ? 'y' : $builder->prompt("\nIUP detected, wanna use IUP already installed on your system (y/n)?", 'y');
     $builder->notes('already_installed_lib', undef) if lc($ans) ne 'y';
   }
-  my $ans = $ENV{TRAVIS} ? 'n' : $builder->prompt("\nWanna see more debug info during build (y/n)?", 'n');
-  $builder->notes('build_debug_info', lc($ans) eq 'y' ? 1 : 0);
 
   # set what tarballs we are gonna use
-  $builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.8_Sources.tar.gz');
-  $builder->notes('iup_sha1', '663694e3817d3953543bd8d2fe7d9a9932582efa');
-  $builder->notes('iup_patches', [ qw!patches/iup-cygwin.diff! ] );
+  #$builder->notes('iup_url', 'http://download.sf.net/iup/iup-3.8_Sources.tar.gz');
+  #$builder->notes('iup_sha1', '663694e3817d3953543bd8d2fe7d9a9932582efa');
+  $builder->notes('iup_url', 'http://strawberryperl.com/package/kmx/iup/iup-cvs.tar.gz');
+  $builder->notes('iup_sha1', 'd91a27ebc1ebadbd8fba05c8e173f1bf473cc605');
+  $builder->notes('iup_patches', [ qw!patches/iup-cygwin.diff patches/iup-mapvk_vk_to_char.diff patches/iup-old-cygwin-defines.diff! ] );
 
   $builder->notes('im_url', 'http://download.sf.net/imtoolkit/im-3.8.1_Sources.tar.gz');
   $builder->notes('im_sha1', '7e7dcdf0760e75a866d5a4d1176de2ce29274f51');
-  $builder->notes('im_patches', [ qw!patches/im-dragonfly.diff patches/im-vc6.diff patches/im-msvc-vsnprintf.diff! ] );
+  $builder->notes('im_patches', [ qw!patches/im-dragonfly.diff patches/im-msvc-int64.diff patches/im-msvc-vsnprintf.diff! ] );
 
-  $builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.6.1_Sources.tar.gz');
-  $builder->notes('cd_sha1', '3a10939a310cb9af0be5000a7e613a6308ef8e8c');
+  #$builder->notes('cd_url', 'http://download.sf.net/canvasdraw/cd-5.6.1_Sources.tar.gz');
+  #$builder->notes('cd_sha1', '3a10939a310cb9af0be5000a7e613a6308ef8e8c');
+  $builder->notes('cd_url', 'http://strawberryperl.com/package/kmx/iup/cd-cvs.tar.gz');
+  $builder->notes('cd_sha1', 'ae43e901d0b6f9168f5774a69b8d3e30191895a8');
   $builder->notes('cd_patches', [ qw!patches/cd-dragonfly.diff! ] );
 }
 
