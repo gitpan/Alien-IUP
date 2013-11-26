@@ -14,7 +14,7 @@ Alien::IUP - Building, finding and using iup + related libraries - L<http://www.
 =cut
 
 # following recommendation from http://www.dagolden.com/index.php/369/version-numbers-should-be-boring/
-our $VERSION = "0.600_5";
+our $VERSION = "0.600_6";
 $VERSION = eval $VERSION;
 
 =head1 VERSION
@@ -25,9 +25,9 @@ Version 0.601 of Alien::IUP is based on the following:
 
 =item * I<iup> library 3.9 - see L<http://www.tecgraf.puc-rio.br/iup/>
 
-=item * I<im> library 3.8.1 - see L<http://www.tecgraf.puc-rio.br/im/>
+=item * I<im> library 3.8.2 - see L<http://www.tecgraf.puc-rio.br/im/>
 
-=item * I<cd> library 5.6.1 - see L<http://www.tecgraf.puc-rio.br/cd/>
+=item * I<cd> library 5.7 - see L<http://www.tecgraf.puc-rio.br/cd/>
 
 =back
 
@@ -37,26 +37,16 @@ B<IMPORTANT:> This module is not a perl binding for I<iup + related> libraries; 
 a helper module. The real perl binding is implemented by L<IUP|IUP> module,
 which is using Alien::IUP to locate I<iup + related> libraries on your system (or build it from source codes).
 
-Alien::IUP tries (in given order) during its installation:
+Alien::IUP installation comprise of:
 
 =over
 
-=item * Locate an already installed I<iup> and related libraries  + ask user whether
-to use the already installed I<iup> or whether to build I<iup> from sources
+=item * Downloading I<iup> & co. source code tarballs
 
-=item * Via env variable IUP_DIR you can specify where the build script should look
-for the already installed I<iup> and related libs (directories $ENV{IUP_DIR}/lib and 
-$ENV{IUP_DIR}/include are expected to exist)
+=item * Building I<iup> & co. binaries from source codes (note: static libraries are build)
 
-=item * When not using the already installed libraries build process continues with
-the following steps
-
-=item * Download I<iup> & co. source code tarballs
-
-=item * Build I<iup> & co. binaries from source codes (note: static libraries are build in this case)
-
-=item * Install libs and dev files (*.h, *.a) into I<share> directory of Alien::IUP
-distribution - I<share> directory is usually something like this: /usr/lib/perl5/site_perl/5.10/auto/share/dist/Alien-IUP
+=item * Installing libs and dev files (*.h, *.a) into I<share> directory of Alien::IUP
+distribution - I<share> directory is usually something like this: /usr/lib/perl5/site_perl/5.18/auto/share/dist/Alien-IUP
 
 =back
 
@@ -158,7 +148,7 @@ sub config {
   my $subdir = Alien::IUP::ConfigData->config('share_subdir');
   unless ($subdir) {
     #we are using lib already installed on your system not compiled by Alien
-    #therefore no additinal magic needed
+    #therefore no additional magic needed
     return Alien::IUP::ConfigData->config('config')->{$param};
   }
   my $share_dir = dist_dir('Alien-IUP');
